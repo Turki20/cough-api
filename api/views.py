@@ -60,11 +60,27 @@ class PredictView(APIView):
             return Response({"error": "تأكد أنك قمت برفع الملف الصحيح .wav"}, status=400)
 
         path = default_storage.save("temp.wav", file)
-        features = extract_features(path)
+        full_path = default_storage.path(path)
+        features = extract_features(full_path)
         X = pd.DataFrame([features])
 
         model = joblib.load(MODEL_FILE)
         prediction = model.predict(X)[0]
         label_ar = "مصاب" if prediction == "infected" else "غير مصاب"
 
+        default_storage.delete(path)
         return Response({"result": f"{label_ar}"})
+
+
+import subprocess
+
+class FFmpegCheckView(APIView):
+    def get(self, request):
+        try:
+            result = subprocess.run(['ffmpeg', '-version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if result.returncode == 0:
+                return Response({"ffmpeg": "Installed ✅", "details": result.stdout.decode()})
+            else:
+                return Response({"ffmpeg": "Not installed ❌", "error": result.stderr.decode()})
+        except FileNotFoundError:
+            return Response({"ffmpeg": "Not installed ❌"})
