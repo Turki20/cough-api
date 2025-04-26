@@ -6,6 +6,7 @@ charset-normalizer==3.4.1
 decorator==5.2.1
 Django==5.2
 djangorestframework==3.16.0
+gunicorn==23.0.0
 idna==3.10
 joblib==1.4.2
 lazy_loader==0.4
