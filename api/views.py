@@ -71,16 +71,3 @@ class PredictView(APIView):
         default_storage.delete(path)
         return Response({"result": f"{label_ar}"})
 
-
-import subprocess
-
-class FFmpegCheckView(APIView):
-    def get(self, request):
-        try:
-            result = subprocess.run(['ffmpeg', '-version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            if result.returncode == 0:
-                return Response({"ffmpeg": "Installed", "details": result.stdout.decode()})
-            else:
-                return Response({"ffmpeg": "Not installed", "error": result.stderr.decode()})
-        except FileNotFoundError:
-            return Response({"ffmpeg": "Not installed"})
