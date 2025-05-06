@@ -79,8 +79,8 @@ class FFmpegCheckView(APIView):
         try:
             result = subprocess.run(['ffmpeg', '-version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             if result.returncode == 0:
-                return Response({"ffmpeg": "Installed ✅", "details": result.stdout.decode()})
+                return Response({"ffmpeg": "Installed", "details": result.stdout.decode()})
             else:
-                return Response({"ffmpeg": "Not installed ❌", "error": result.stderr.decode()})
+                return Response({"ffmpeg": "Not installed", "error": result.stderr.decode()})
         except FileNotFoundError:
-            return Response({"ffmpeg": "Not installed ❌"})
+            return Response({"ffmpeg": "Not installed"})
